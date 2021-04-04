@@ -1,20 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jrogetdigitalharbor.back.models;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
+import jrogetdigitalharbor.back.RequestModel;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -26,24 +19,17 @@ public class Patient {
 
     @NotNull
     @NotEmpty
-    @Min(1)
-    @Max(20)
     public String name;
 
     @NotNull
     @NotEmpty
-    @Min(1)
-    @Max(20)
     public String lastname;
 
     @NotNull
-    @NotEmpty
-    public Date dateOfBirth;
+    public Instant dateOfBirth;
 
     @NotNull
     @NotEmpty
-    @Min(5)
-    @Max(30)
     public String address;
 
     @NotNull
@@ -54,23 +40,40 @@ public class Patient {
     public List<Appoinment> appointments;
 
     @NotNull
-    @NotEmpty
     @CreatedDate
     public Instant createdDate;
 
     @NotNull
-    @NotEmpty
     @CreatedBy
-    public User userCreator;
+    public String userCreatorId;
 
     @NotNull
-    @NotEmpty
     @LastModifiedDate
     public Instant lastModifierDate;
 
     @NotNull
-    @NotEmpty
     @LastModifiedBy
-    public User userLastModifier;
+    public String userLastModifierId;
+
+    public Patient() {
+    }
+
+    public Patient(RequestModel<Patient> request) {
+        this.id = request.body.id;
+        this.name = request.body.name;
+        this.lastname = request.body.lastname;
+        this.dateOfBirth = request.body.dateOfBirth;
+        this.address = request.body.address;
+        this.profilePicture = request.body.profilePicture;
+        this.appointments = request.body.appointments;
+        this.userCreatorId = request.body.userCreatorId;
+        this.createdDate = request.body.createdDate;
+        if (request.body.userCreatorId == null) {
+            this.userCreatorId = request.userId;
+            this.createdDate = Instant.now();
+        }
+        this.userLastModifierId = request.userId;
+        this.lastModifierDate = Instant.now();
+    }
 
 }

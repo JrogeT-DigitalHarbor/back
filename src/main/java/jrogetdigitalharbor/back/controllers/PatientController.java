@@ -2,8 +2,8 @@ package jrogetdigitalharbor.back.controllers;
 
 import jrogetdigitalharbor.back.RequestModel;
 import jrogetdigitalharbor.back.ResponseModel;
-import jrogetdigitalharbor.back.models.Hospital;
-import jrogetdigitalharbor.back.repositories.HospitalRepository;
+import jrogetdigitalharbor.back.models.Patient;
+import jrogetdigitalharbor.back.repositories.PatientRepository;
 import jrogetdigitalharbor.back.repositories.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,24 +12,25 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/hospitals")
-public class HospitalController extends BaseController {
+@RequestMapping("/api/patients")
+public class PatientController extends BaseController {
 
-    private HospitalRepository repository;
+    private PatientRepository repository;
     private UserRepository userRepository;
+    private String modelName = "Patient";
 
-    public HospitalController(HospitalRepository repository, UserRepository userRepository) {
+    public PatientController(PatientRepository repository, UserRepository userRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
     }
 
     @PostMapping("")
-    public ResponseModel create(@RequestBody RequestModel<Hospital> request) {
+    public ResponseModel create(@RequestBody RequestModel<Patient> request) {
         try {
             userRepository.findById(request.userId).get();
-            Hospital newHospital = new Hospital(request);
-            Hospital hospitalCreated = repository.save(newHospital);
-            return sendResponse("Hospital created.", hospitalCreated);
+            Patient newPatient = new Patient(request);
+            Patient patientCreated = repository.save(newPatient);
+            return sendResponse(modelName + " created.", patientCreated);
         } catch (NoSuchElementException e) {
             return sendResponse("User not found.");
         } catch (Exception e) {
@@ -39,25 +40,25 @@ public class HospitalController extends BaseController {
 
     @GetMapping("")
     public ResponseModel readAll() {
-        List<Hospital> hospitals = this.repository.findAll();
-        return sendResponse("hospitals found.", hospitals);
+        List<Patient> patients = this.repository.findAll();
+        return sendResponse(modelName + " found.", patients);
     }
 
     @GetMapping("/{id}")
     public ResponseModel readOne(@PathVariable String id) {
-        Optional<Hospital> doctorFound = repository.findById(id);
-        if (!doctorFound.isPresent()) {
-            return sendResponse("Hospital not found.");
+        Optional<Patient> patientFound = repository.findById(id);
+        if (!patientFound.isPresent()) {
+            return sendResponse(modelName + " not found.");
         }
-        return sendResponse("Hospital found.", doctorFound.get());
+        return sendResponse(modelName + " found.", patientFound.get());
     }
 
     @PutMapping("/{id}")
-    public ResponseModel update(@RequestBody RequestModel<Hospital> request, @PathVariable String id) {
+    public ResponseModel update(@RequestBody RequestModel<Patient> request, @PathVariable String id) {
         try {
             userRepository.findById(request.userId).get();
-            Hospital hospitalFound = new Hospital(request);
-            return sendResponse("Hospital updated.", this.repository.save(hospitalFound));
+            Patient patientFound = new Patient(request);
+            return sendResponse(modelName + " updated.", this.repository.save(patientFound));
         } catch (NoSuchElementException e) {
             return sendResponse("User not found.");
         } catch (Exception e) {
@@ -68,9 +69,9 @@ public class HospitalController extends BaseController {
     @DeleteMapping("/{id}")
     public ResponseModel deleteEmployee(@PathVariable String id) {
         if (!repository.findById(id).isPresent()) {
-            return sendResponse("Hospital not found.");
+            return sendResponse(modelName + " not found.");
         }
         repository.deleteById(id);
-        return sendResponse("Hospital deleted.");
+        return sendResponse(modelName + " deleted.");
     }
 }

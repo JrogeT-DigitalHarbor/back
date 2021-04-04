@@ -22,8 +22,6 @@ public class Appoinment {
 
     @NotNull
     @NotEmpty
-    @Min(5)
-    @Max(30)
     public String description;
 
     @NotNull
@@ -34,23 +32,19 @@ public class Appoinment {
     public String doctorId;
 
     @NotNull
-    @NotEmpty
     @CreatedDate
     public Instant createdDate;
 
     @NotNull
-    @NotEmpty
     @CreatedBy
-    public User userCreator;
+    public String userCreatorId;
 
     @NotNull
-    @NotEmpty
     @LastModifiedDate
     public Instant lastModifierDate;
 
     @NotNull
-    @NotEmpty
     @LastModifiedBy
-    public User userLastModifier;
+    public String userLastModifierId;
 
 }
