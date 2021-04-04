@@ -8,6 +8,10 @@ package jrogetdigitalharbor.back.models;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Document("appointments")
@@ -16,34 +20,37 @@ public class Appoinment {
     @Id
     public String id;
 
-    public String name;
+    @NotNull
+    @NotEmpty
+    @Min(5)
+    @Max(30)
     public String description;
+
+    @NotNull
+    public Instant date;
+
+    @NotNull
+    @NotEmpty
     public String doctorId;
 
+    @NotNull
+    @NotEmpty
     @CreatedDate
-    private Instant createdDate;
+    public Instant createdDate;
+
+    @NotNull
+    @NotEmpty
     @CreatedBy
-    private User userCreator;
+    public User userCreator;
+
+    @NotNull
+    @NotEmpty
     @LastModifiedDate
-    private Instant lastModifierDate;
+    public Instant lastModifierDate;
+
+    @NotNull
+    @NotEmpty
     @LastModifiedBy
-    private User userLastModifier;
+    public User userLastModifier;
 
-    public Appoinment(String name, String description, String doctorId, User userCreator) {
-        this.name = name;
-        this.description = description;
-        this.doctorId = doctorId;
-        this.createdDate = Instant.now();
-        this.userCreator = userCreator;
-        this.lastModifierDate = Instant.now();
-        this.userLastModifier = userCreator;
-    }
-
-    public void update(String name, String description, String doctorId, User userLastModifier) {
-        this.name = name;
-        this.description = description;
-        this.doctorId = doctorId;
-        this.lastModifierDate = Instant.now();
-        this.userLastModifier = userLastModifier;
-    }
 }

@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jrogetdigitalharbor.back.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jrogetdigitalharbor.back.RequestModel;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.print.Doc;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 @Document(collection = "doctors")
@@ -19,47 +17,71 @@ public class Doctor {
     @Id
     public String id;
 
+    @NotNull
+    @NotEmpty
     public String name;
-    public String lastname;
-    public Date dateOfBirth;
-    public String address;
-    public String profilePicture;
-    public List<Specialty> specialties;
 
+    @NotNull
+    @NotEmpty
+    public String lastname;
+
+    @NotNull
+    public Instant dateOfBirth;
+
+    @NotNull
+    @NotEmpty
+    public String address;
+
+    @NotNull
+    @NotEmpty
+    public String profilePicture;
+
+    @NotNull
+    public List<String> specialtiesIds;
+
+    @NotNull
     @CreatedDate
-    private Instant createdDate;
+    public Instant createdDate;
+
+    @NotNull
     @CreatedBy
-    private User userCreator;
+    public String userCreatorId;
+
+    @NotNull
     @LastModifiedDate
-    private Instant lastModifierDate;
+    public Instant lastModifierDate;
+
+    @NotNull
     @LastModifiedBy
-    private User userLastModifier;
+    public String userLastModifierId;
 
     public Doctor() {
-        this.name = "name";
-        this.lastname = "lastname";
-        this.dateOfBirth = new Date();
-        this.address = "address";
-        this.profilePicture = "profilePicture";
-        this.specialties = new LinkedList<>();
     }
 
-    public Doctor(String name, String lastname, Date dateOfBirth, String address, String profilePicture, User userCreator) {
-        this.name = name;
-        this.lastname = lastname;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.profilePicture = profilePicture;
-        this.specialties = new LinkedList<>();
-        this.userCreator = userCreator;
-        this.createdDate = Instant.now();
-        this.userLastModifier = userCreator;
+    public Doctor(RequestModel<Doctor> request) {
+        this.name = request.body.name;
+        this.lastname = request.body.lastname;
+        this.dateOfBirth = request.body.dateOfBirth;
+        this.address = request.body.address;
+        this.profilePicture = request.body.profilePicture;
+        this.specialtiesIds = request.body.specialtiesIds;
+        this.userCreatorId = request.body.userCreatorId;
+        this.createdDate = request.body.createdDate;
+        if (request.body.userCreatorId == null) {
+            this.userCreatorId = request.userId;
+            this.createdDate = Instant.now();
+        }
+        this.userLastModifierId = request.userId;
         this.lastModifierDate = Instant.now();
     }
 
-    @Override
-    public String toString() {
-        return this.id + ":" + this.name;
+    public void updateFrom(Doctor doctor) {
+        this.name = doctor.name;
+        this.lastname = doctor.lastname;
+        this.dateOfBirth = doctor.dateOfBirth;
+        this.address = doctor.address;
+        this.profilePicture = doctor.profilePicture;
+        this.specialtiesIds = doctor.specialtiesIds;
+        this.lastModifierDate = Instant.now();
     }
-
 }

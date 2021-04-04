@@ -5,10 +5,10 @@
  */
 package jrogetdigitalharbor.back.controllers;
 
-import jrogetdigitalharbor.back.models.Patient;
+import jrogetdigitalharbor.back.ResponseModel;
 import jrogetdigitalharbor.back.models.User;
-import jrogetdigitalharbor.back.repositories.PatientRepository;
 import jrogetdigitalharbor.back.repositories.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController extends BaseController {
 
     private UserRepository repository;
 
@@ -25,37 +25,54 @@ public class UserController {
     }
 
     @PostMapping("")
-    public User create(@RequestBody User newEmployee) {
-        return repository.save(newEmployee);
+    public ResponseModel create(@RequestBody User newEmployee) {
+        try {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String encodedPw = bCryptPasswordEncoder.encode(newEmployee.password);
+            newEmployee.password = encodedPw;
+            User userCreated = repository.save(newEmployee);
+            return sendResponse("User created.", userCreated);
+        } catch (Exception e) {
+            return sendResponse(e.getMessage() + newEmployee.username);
+        }
     }
 
     @GetMapping("")
-    public List<User> readAll() {
-        return this.repository.findAll();
+    public ResponseModel readAll() {
+        List<User> users = this.repository.findAll();
+        return sendResponse("Users found.", users);
     }
 
     @GetMapping("/{id}")
-    public User readOne(@PathVariable String id) {
+    public ResponseModel readOne(@PathVariable String id) {
         Optional<User> userFound = repository.findById(id);
         if (!userFound.isPresent()) {
-            return null;
+            return sendResponse("User not found.");
         }
-        return userFound.get();
+        return sendResponse("User found.", userFound.get());
     }
 
     @PutMapping("/{id}")
-    public User update(@RequestBody User newUser, @PathVariable String id) {
+    public ResponseModel update(@RequestBody User newUser, @PathVariable String id) {
         Optional<User> found = repository.findById(id);
         if (!found.isPresent()) {
-            return null;
+            return sendResponse("User not found");
         }
-        User userFound = found.get();
-        userFound.username = newUser.username;
-        return repository.save(userFound);
+        try {
+            User userFound = found.get();
+            userFound.username = newUser.username;
+            return sendResponse("User updated.", repository.save(userFound));
+        } catch (Exception e) {
+            return sendResponse(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    void deleteEmployee(@PathVariable String id) {
+    public ResponseModel deleteEmployee(@PathVariable String id) {
+        if (!repository.findById(id).isPresent()) {
+            return sendResponse("User not found.");
+        }
         repository.deleteById(id);
+        return sendResponse("User deleted.");
     }
 }

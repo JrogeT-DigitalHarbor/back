@@ -8,6 +8,10 @@ package jrogetdigitalharbor.back.models;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Document("hospitals")
@@ -16,26 +20,40 @@ public class Hospital {
     @Id
     public String id;
 
+    @NotNull
+    @NotEmpty
+    @Min(5)
+    @Max(30)
     public String name;
+
+    @NotNull
+    @NotEmpty
+    @Min(5)
+    @Max(30)
     public String description;
+
+    @NotNull
+    @NotEmpty
     public String doctorId;
 
+    @NotNull
+    @NotEmpty
     @CreatedDate
-    private Instant createdDate;
-    @CreatedBy
-    private User userCreator;
-    @LastModifiedDate
-    private Instant lastModifierDate;
-    @LastModifiedBy
-    private User userLastModifier;
+    public Instant createdDate;
 
-    public Hospital(String name, String description, String doctorId, User userCreator) {
-        this.name = name;
-        this.description = description;
-        this.doctorId = doctorId;
-        this.createdDate = Instant.now();
-        this.userCreator = userCreator;
-        this.lastModifierDate = Instant.now();
-        this.userLastModifier = userCreator;
-    }
+    @NotNull
+    @NotEmpty
+    @CreatedBy
+    public User userCreator;
+
+    @NotNull
+    @NotEmpty
+    @LastModifiedDate
+    public Instant lastModifierDate;
+
+    @NotNull
+    @NotEmpty
+    @LastModifiedBy
+    public User userLastModifier;
+
 }

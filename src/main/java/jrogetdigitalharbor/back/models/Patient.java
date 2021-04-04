@@ -13,53 +13,64 @@ import java.util.List;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Document(collection = "patients")
 public class Patient {
 
     @Id
     public String id;
 
+    @NotNull
+    @NotEmpty
+    @Min(1)
+    @Max(20)
     public String name;
+
+    @NotNull
+    @NotEmpty
+    @Min(1)
+    @Max(20)
     public String lastname;
+
+    @NotNull
+    @NotEmpty
     public Date dateOfBirth;
+
+    @NotNull
+    @NotEmpty
+    @Min(5)
+    @Max(30)
     public String address;
+
+    @NotNull
+    @NotEmpty
     public String profilePicture;
+
+    @NotNull
     public List<Appoinment> appointments;
 
+    @NotNull
+    @NotEmpty
     @CreatedDate
-    private Instant createdDate;
+    public Instant createdDate;
+
+    @NotNull
+    @NotEmpty
     @CreatedBy
-    private User userCreator;
+    public User userCreator;
+
+    @NotNull
+    @NotEmpty
     @LastModifiedDate
-    private Instant lastModifierDate;
+    public Instant lastModifierDate;
+
+    @NotNull
+    @NotEmpty
     @LastModifiedBy
-    private User userLastModifier;
-
-    public Patient() {
-        this.name = "name";
-        this.lastname = "lastname";
-        this.dateOfBirth = new Date();
-        this.address = "address";
-        this.profilePicture = "profilePicture";
-        this.appointments = new LinkedList<>();
-    }
-
-    public Patient(String name, String lastname, Date dateOfBirth, String address, String profilePicture, User userCreator) {
-        this.name = name;
-        this.lastname = lastname;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.profilePicture = profilePicture;
-        this.appointments = new LinkedList<>();
-        this.createdDate = Instant.now();
-        this.userCreator = userCreator;
-        this.lastModifierDate= Instant.now();
-        this.userLastModifier = userCreator;
-    }
-
-    @Override
-    public String toString() {
-        return this.id + ":" + this.name;
-    }
+    public User userLastModifier;
 
 }

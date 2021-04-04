@@ -3,6 +3,9 @@ package jrogetdigitalharbor.back;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,10 +17,14 @@ public class BackApplication {
         SpringApplication.run(BackApplication.class, args);
     }
 
-    @GetMapping("/echo")
-    public String test(){
-        return "echo";
+    @GetMapping("")
+    public String server(){
+        return "Backend running...";
     }
 
+    @GetMapping("/echo")
+    public String echo(){
+        return "echo";
+    }
 
 }
