@@ -1,11 +1,9 @@
 package jrogetdigitalharbor.back.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jrogetdigitalharbor.back.RequestModel;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.print.Doc;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -59,6 +57,7 @@ public class Doctor {
     }
 
     public Doctor(RequestModel<Doctor> request) {
+        this.id = request.body.id;
         this.name = request.body.name;
         this.lastname = request.body.lastname;
         this.dateOfBirth = request.body.dateOfBirth;
@@ -72,16 +71,6 @@ public class Doctor {
             this.createdDate = Instant.now();
         }
         this.userLastModifierId = request.userId;
-        this.lastModifierDate = Instant.now();
-    }
-
-    public void updateFrom(Doctor doctor) {
-        this.name = doctor.name;
-        this.lastname = doctor.lastname;
-        this.dateOfBirth = doctor.dateOfBirth;
-        this.address = doctor.address;
-        this.profilePicture = doctor.profilePicture;
-        this.specialtiesIds = doctor.specialtiesIds;
         this.lastModifierDate = Instant.now();
     }
 }

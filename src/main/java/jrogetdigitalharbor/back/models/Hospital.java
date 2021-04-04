@@ -5,6 +5,7 @@
  */
 package jrogetdigitalharbor.back.models;
 
+import jrogetdigitalharbor.back.RequestModel;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.List;
 
 @Document("hospitals")
 public class Hospital {
@@ -22,38 +24,43 @@ public class Hospital {
 
     @NotNull
     @NotEmpty
-    @Min(5)
-    @Max(30)
     public String name;
 
     @NotNull
     @NotEmpty
-    @Min(5)
-    @Max(30)
-    public String description;
+    public List<String> doctorsIds;
 
     @NotNull
-    @NotEmpty
-    public String doctorId;
-
-    @NotNull
-    @NotEmpty
     @CreatedDate
     public Instant createdDate;
 
     @NotNull
-    @NotEmpty
     @CreatedBy
-    public User userCreator;
+    public String userCreatorId;
 
     @NotNull
-    @NotEmpty
     @LastModifiedDate
     public Instant lastModifierDate;
 
     @NotNull
-    @NotEmpty
     @LastModifiedBy
-    public User userLastModifier;
+    public String userLastModifierId;
+
+    public Hospital() {
+    }
+
+    public Hospital(RequestModel<Hospital> request) {
+        this.id = request.body.id;
+        this.name = request.body.name;
+        this.doctorsIds = request.body.doctorsIds;
+        this.userCreatorId = request.body.userCreatorId;
+        this.createdDate = request.body.createdDate;
+        if (request.body.userCreatorId == null) {
+            this.userCreatorId = request.userId;
+            this.createdDate = Instant.now();
+        }
+        this.userLastModifierId = request.userId;
+        this.lastModifierDate = Instant.now();
+    }
 
 }

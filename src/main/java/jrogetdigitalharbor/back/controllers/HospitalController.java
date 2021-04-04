@@ -2,8 +2,8 @@ package jrogetdigitalharbor.back.controllers;
 
 import jrogetdigitalharbor.back.RequestModel;
 import jrogetdigitalharbor.back.ResponseModel;
-import jrogetdigitalharbor.back.models.Doctor;
-import jrogetdigitalharbor.back.repositories.DoctorRepository;
+import jrogetdigitalharbor.back.models.Hospital;
+import jrogetdigitalharbor.back.repositories.HospitalRepository;
 import jrogetdigitalharbor.back.repositories.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,24 +12,24 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/doctors")
-public class DoctorController extends BaseController {
+@RequestMapping("/api/hospitals")
+public class HospitalController extends BaseController {
 
-    private DoctorRepository repository;
+    private HospitalRepository repository;
     private UserRepository userRepository;
 
-    public DoctorController(DoctorRepository repository, UserRepository userRepository) {
+    public HospitalController(HospitalRepository repository, UserRepository userRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
     }
 
     @PostMapping("")
-    public ResponseModel create(@RequestBody RequestModel<Doctor> request) {
+    public ResponseModel create(@RequestBody RequestModel<Hospital> request) {
         try {
             userRepository.findById(request.userId).get();
-            Doctor newDoctor = new Doctor(request);
-            Doctor doctorCreated = repository.save(newDoctor);
-            return sendResponse("Doctor created.", doctorCreated);
+            Hospital newHospital = new Hospital(request);
+            Hospital hospitalCreated = repository.save(newHospital);
+            return sendResponse("Hospital created.", hospitalCreated);
         } catch (NoSuchElementException e) {
             return sendResponse("User not found.");
         } catch (Exception e) {
@@ -39,25 +39,25 @@ public class DoctorController extends BaseController {
 
     @GetMapping("")
     public ResponseModel readAll() {
-        List<Doctor> doctors = this.repository.findAll();
-        return sendResponse("doctors found.", doctors);
+        List<Hospital> doctors = this.repository.findAll();
+        return sendResponse("hospitals found.", doctors);
     }
 
     @GetMapping("/{id}")
     public ResponseModel readOne(@PathVariable String id) {
-        Optional<Doctor> doctorFound = repository.findById(id);
+        Optional<Hospital> doctorFound = repository.findById(id);
         if (!doctorFound.isPresent()) {
-            return sendResponse("Doctor not found.");
+            return sendResponse("Hospital not found.");
         }
-        return sendResponse("Doctor found.", doctorFound.get());
+        return sendResponse("Hospital found.", doctorFound.get());
     }
 
     @PutMapping("/{id}")
-    public ResponseModel update(@RequestBody RequestModel<Doctor> request, @PathVariable String id) {
+    public ResponseModel update(@RequestBody RequestModel<Hospital> request, @PathVariable String id) {
         try {
             userRepository.findById(request.userId).get();
-            Doctor doctorFound = new Doctor(request);
-            return sendResponse("Doctor updated.", this.repository.save(doctorFound));
+            Hospital hospitalFound = new Hospital(request);
+            return sendResponse("Hospital updated.", this.repository.save(hospitalFound));
         } catch (NoSuchElementException e) {
             return sendResponse("User not found.");
         } catch (Exception e) {
@@ -68,9 +68,9 @@ public class DoctorController extends BaseController {
     @DeleteMapping("/{id}")
     public ResponseModel deleteEmployee(@PathVariable String id) {
         if (!repository.findById(id).isPresent()) {
-            return sendResponse("Doctor not found.");
+            return sendResponse("Hospital not found.");
         }
         repository.deleteById(id);
-        return sendResponse("Doctor deleted.");
+        return sendResponse("Hospital deleted.");
     }
 }
