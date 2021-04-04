@@ -2,6 +2,7 @@ package jrogetdigitalharbor.back.controllers;
 
 import jrogetdigitalharbor.back.RequestModel;
 import jrogetdigitalharbor.back.ResponseModel;
+import jrogetdigitalharbor.back.models.Appointment;
 import jrogetdigitalharbor.back.models.Patient;
 import jrogetdigitalharbor.back.repositories.PatientRepository;
 import jrogetdigitalharbor.back.repositories.UserRepository;
@@ -67,11 +68,27 @@ public class PatientController extends BaseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseModel deleteEmployee(@PathVariable String id) {
+    public ResponseModel delete(@PathVariable String id) {
         if (!repository.findById(id).isPresent()) {
             return sendResponse(modelName + " not found.");
         }
         repository.deleteById(id);
         return sendResponse(modelName + " deleted.");
+    }
+
+    @PostMapping("/{patientId}/appointments")
+    public ResponseModel addAppointment(@RequestBody RequestModel<Appointment> request, @PathVariable String patientId) {
+        try {
+            userRepository.findById(request.userId).get();
+            Patient patientToUpdate = repository.findById(patientId).get();
+            Appointment newAppointment = new Appointment(request);
+            patientToUpdate.appointments.add(newAppointment);
+            Patient patientUpdated = repository.save(patientToUpdate);
+            return sendResponse("Appointment created.", patientUpdated);
+        } catch (NoSuchElementException e) {
+            return sendResponse("User/Patient not found.");
+        } catch (Exception e) {
+            return sendErrorResponse(e);
+        }
     }
 }

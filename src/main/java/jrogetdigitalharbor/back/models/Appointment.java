@@ -5,20 +5,16 @@
  */
 package jrogetdigitalharbor.back.models;
 
+import jrogetdigitalharbor.back.RequestModel;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Document("appointments")
-public class Appoinment {
-
-    @Id
-    public String id;
+public class Appointment {
 
     @NotNull
     @NotEmpty
@@ -47,4 +43,20 @@ public class Appoinment {
     @LastModifiedBy
     public String userLastModifierId;
 
+    public Appointment() {
+    }
+
+    public Appointment(RequestModel<Appointment> request) {
+        this.description = request.body.description;
+        this.date = request.body.date;
+        this.doctorId = request.body.doctorId;
+        this.userCreatorId = request.body.userCreatorId;
+        this.createdDate = request.body.createdDate;
+        if (request.body.userCreatorId == null) {
+            this.userCreatorId = request.userId;
+            this.createdDate = Instant.now();
+        }
+        this.userLastModifierId = request.userId;
+        this.lastModifierDate = Instant.now();
+    }
 }

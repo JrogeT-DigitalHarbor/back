@@ -66,7 +66,7 @@ public class HospitalController extends BaseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseModel deleteEmployee(@PathVariable String id) {
+    public ResponseModel delete(@PathVariable String id) {
         if (!repository.findById(id).isPresent()) {
             return sendResponse("Hospital not found.");
         }

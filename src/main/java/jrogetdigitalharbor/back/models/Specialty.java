@@ -5,6 +5,7 @@
  */
 package jrogetdigitalharbor.back.models;
 
+import jrogetdigitalharbor.back.RequestModel;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,14 +23,10 @@ public class Specialty {
 
     @NotNull
     @NotEmpty
-    @Min(1)
-    @Max(20)
     public String name;
 
     @NotNull
     @NotEmpty
-    @Min(5)
-    @Max(30)
     public String description;
 
     @NotNull
@@ -37,22 +34,36 @@ public class Specialty {
     public String icon;
 
     @NotNull
-    @NotEmpty
     @CreatedDate
-    private Instant createdDate;
+    public Instant createdDate;
 
     @NotNull
-    @NotEmpty
     @CreatedBy
-    private User userCreator;
+    public String userCreatorId;
 
     @NotNull
-    @NotEmpty
     @LastModifiedDate
-    private Instant lastModifierDate;
+    public Instant lastModifierDate;
 
     @NotNull
-    @NotEmpty
     @LastModifiedBy
-    private User userLastModifier;
+    public String userLastModifierId;
+
+    public Specialty() {
+    }
+
+    public Specialty(RequestModel<Specialty> request) {
+        this.id = request.body.id;
+        this.name = request.body.name;
+        this.description = request.body.description;
+        this.icon = request.body.icon;
+        this.userCreatorId = request.body.userCreatorId;
+        this.createdDate = request.body.createdDate;
+        if (request.body.userCreatorId == null) {
+            this.userCreatorId = request.userId;
+            this.createdDate = Instant.now();
+        }
+        this.userLastModifierId = request.userId;
+        this.lastModifierDate = Instant.now();
+    }
 }

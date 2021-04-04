@@ -37,7 +37,7 @@ public class Patient {
     public String profilePicture;
 
     @NotNull
-    public List<Appoinment> appointments;
+    public List<Appointment> appointments;
 
     @NotNull
     @CreatedDate
