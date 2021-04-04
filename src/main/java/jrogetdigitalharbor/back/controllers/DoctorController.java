@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/doctors")
 public class DoctorController extends BaseController {

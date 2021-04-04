@@ -20,10 +20,6 @@ public class Hospital {
     public String name;
 
     @NotNull
-    @NotEmpty
-    public List<String> doctorsIds;
-
-    @NotNull
     @CreatedDate
     public Instant createdDate;
 
@@ -45,7 +41,6 @@ public class Hospital {
     public Hospital(RequestModel<Hospital> request) {
         this.id = request.body.id;
         this.name = request.body.name;
-        this.doctorsIds = request.body.doctorsIds;
         this.userCreatorId = request.body.userCreatorId;
         this.createdDate = request.body.createdDate;
         if (request.body.userCreatorId == null) {

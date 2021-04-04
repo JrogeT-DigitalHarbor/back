@@ -38,6 +38,10 @@ public class Doctor {
     public List<String> specialtiesIds;
 
     @NotNull
+    @NotEmpty
+    public String hospitalId;
+
+    @NotNull
     @CreatedDate
     public Instant createdDate;
 
@@ -64,6 +68,7 @@ public class Doctor {
         this.address = request.body.address;
         this.profilePicture = request.body.profilePicture;
         this.specialtiesIds = request.body.specialtiesIds;
+        this.hospitalId = request.body.hospitalId;
         this.userCreatorId = request.body.userCreatorId;
         this.createdDate = request.body.createdDate;
         if (request.body.userCreatorId == null) {

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/specialties")
 public class SpecialtyController extends BaseController {
