@@ -12,4 +12,5 @@ public interface PatientRepository extends MongoRepository<Patient, String> {
     List<Patient> findByLastnameLike(String regexp);
 
     List<Patient> findByDateOfBirthBetween(Instant dateA, Instant dateB);
+
 }

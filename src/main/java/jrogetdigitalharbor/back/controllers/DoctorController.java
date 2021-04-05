@@ -3,11 +3,13 @@ package jrogetdigitalharbor.back.controllers;
 import jrogetdigitalharbor.back.RequestModel;
 import jrogetdigitalharbor.back.ResponseModel;
 import jrogetdigitalharbor.back.SearchingRequest;
-import jrogetdigitalharbor.back.models.Doctor;
+import jrogetdigitalharbor.back.models.*;
 import jrogetdigitalharbor.back.repositories.DoctorRepository;
+import jrogetdigitalharbor.back.repositories.PatientRepository;
 import jrogetdigitalharbor.back.repositories.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -19,10 +21,16 @@ public class DoctorController extends BaseController {
 
     private DoctorRepository repository;
     private UserRepository userRepository;
+    private PatientRepository patientRepository;
 
-    public DoctorController(DoctorRepository repository, UserRepository userRepository) {
+    public DoctorController(
+            DoctorRepository repository,
+            UserRepository userRepository,
+            PatientRepository patientRepository
+    ) {
         this.repository = repository;
         this.userRepository = userRepository;
+        this.patientRepository = patientRepository;
     }
 
     @PostMapping("")
@@ -41,7 +49,20 @@ public class DoctorController extends BaseController {
 
     @GetMapping("")
     public ResponseModel readAll() {
-        List<Doctor> doctors = this.repository.findAll();
+        List<Doctor> doctorsDoc = this.repository.findAll();
+        List<DoctorDTO> doctors = new LinkedList<>();
+        for (Doctor doctor : doctorsDoc) {
+            List<AppointmentDTO> doctorAppointments = new LinkedList<>();
+            List<Patient> patients = patientRepository.findAll();
+            for (Patient patient : patients) {
+                for (Appointment appointment : patient.appointments) {
+                    if (appointment.doctorId.equals(doctor.id)) {
+                        doctorAppointments.add(new AppointmentDTO(appointment, patient));
+                    }
+                }
+            }
+            doctors.add(new DoctorDTO(doctor, doctorAppointments));
+        }
         return sendResponse("doctors found.", doctors);
     }
 
@@ -78,19 +99,58 @@ public class DoctorController extends BaseController {
 
     @PostMapping("/search/name")
     public ResponseModel searchName(@RequestBody SearchingRequest request) {
-        List<Doctor> doctors = repository.findByNameLike(request.word);
+        List<Doctor> doctorsDoc = repository.findByNameLike(request.word);
+        List<DoctorDTO> doctors = new LinkedList<>();
+        for (Doctor doctor : doctorsDoc) {
+            List<AppointmentDTO> doctorAppointments = new LinkedList<>();
+            List<Patient> patients = patientRepository.findAll();
+            for (Patient patient : patients) {
+                for (Appointment appointment : patient.appointments) {
+                    if (appointment.doctorId.equals(doctor.id)) {
+                        doctorAppointments.add(new AppointmentDTO(appointment, patient));
+                    }
+                }
+            }
+            doctors.add(new DoctorDTO(doctor, doctorAppointments));
+        }
         return sendResponse("Doctors found.", doctors);
     }
 
     @PostMapping("/search/lastname")
     public ResponseModel searchLastname(@RequestBody SearchingRequest request) {
-        List<Doctor> doctors = repository.findByLastnameLike(request.word);
+        List<Doctor> doctorsDoc = repository.findByLastnameLike(request.word);
+        List<DoctorDTO> doctors = new LinkedList<>();
+        for (Doctor doctor : doctorsDoc) {
+            List<AppointmentDTO> doctorAppointments = new LinkedList<>();
+            List<Patient> patients = patientRepository.findAll();
+            for (Patient patient : patients) {
+                for (Appointment appointment : patient.appointments) {
+                    if (appointment.doctorId.equals(doctor.id)) {
+                        doctorAppointments.add(new AppointmentDTO(appointment, patient));
+                    }
+                }
+            }
+            doctors.add(new DoctorDTO(doctor, doctorAppointments));
+        }
         return sendResponse("Doctors found.", doctors);
     }
 
     @PostMapping("/search/dates")
     public ResponseModel searchDates(@RequestBody SearchingRequest request) {
-        List<Doctor> doctors = repository.findByDateOfBirthBetween(request.dateA, request.dateB);
+        List<Doctor> doctorsDoc = repository.findByDateOfBirthBetween(request.dateA, request.dateB);
+        List<DoctorDTO> doctors = new LinkedList<>();
+        for (Doctor doctor : doctorsDoc) {
+            List<AppointmentDTO> doctorAppointments = new LinkedList<>();
+            List<Patient> patients = patientRepository.findAll();
+            for (Patient patient : patients) {
+                for (Appointment appointment : patient.appointments) {
+                    if (appointment.doctorId.equals(doctor.id)) {
+                        doctorAppointments.add(new AppointmentDTO(appointment, patient));
+                    }
+                }
+            }
+            doctors.add(new DoctorDTO(doctor, doctorAppointments));
+        }
         return sendResponse("Doctors found.", doctors);
     }
 }
