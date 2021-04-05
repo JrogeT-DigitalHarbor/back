@@ -100,6 +100,12 @@ public class PatientController extends BaseController {
         return sendResponse("Patients found.", patients);
     }
 
+    @PostMapping("/search/lastname")
+    public ResponseModel searchLastname(@RequestBody SearchingRequest request) {
+        List<Patient> patients = repository.findByLastnameLike(request.word);
+        return sendResponse("Patients found.", patients);
+    }
+
     @PostMapping("/search/dates")
     public ResponseModel searchDates(@RequestBody SearchingRequest request) {
         List<Patient> patients = repository.findByDateOfBirthBetween(request.dateA, request.dateB);

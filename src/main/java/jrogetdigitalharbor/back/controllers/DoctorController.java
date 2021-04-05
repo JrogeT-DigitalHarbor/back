@@ -82,6 +82,12 @@ public class DoctorController extends BaseController {
         return sendResponse("Doctors found.", doctors);
     }
 
+    @PostMapping("/search/lastname")
+    public ResponseModel searchLastname(@RequestBody SearchingRequest request) {
+        List<Doctor> doctors = repository.findByLastnameLike(request.word);
+        return sendResponse("Doctors found.", doctors);
+    }
+
     @PostMapping("/search/dates")
     public ResponseModel searchDates(@RequestBody SearchingRequest request) {
         List<Doctor> doctors = repository.findByDateOfBirthBetween(request.dateA, request.dateB);

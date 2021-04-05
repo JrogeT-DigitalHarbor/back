@@ -9,5 +9,7 @@ import java.util.List;
 public interface PatientRepository extends MongoRepository<Patient, String> {
     List<Patient> findByNameLike(String regexp);
 
+    List<Patient> findByLastnameLike(String regexp);
+
     List<Patient> findByDateOfBirthBetween(Instant dateA, Instant dateB);
 }
