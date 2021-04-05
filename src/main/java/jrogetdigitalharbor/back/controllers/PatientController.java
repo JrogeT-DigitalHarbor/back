@@ -2,6 +2,7 @@ package jrogetdigitalharbor.back.controllers;
 
 import jrogetdigitalharbor.back.RequestModel;
 import jrogetdigitalharbor.back.ResponseModel;
+import jrogetdigitalharbor.back.SearchingRequest;
 import jrogetdigitalharbor.back.models.Appointment;
 import jrogetdigitalharbor.back.models.Patient;
 import jrogetdigitalharbor.back.repositories.PatientRepository;
@@ -91,5 +92,17 @@ public class PatientController extends BaseController {
         } catch (Exception e) {
             return sendErrorResponse(e);
         }
+    }
+
+    @PostMapping("/search/name")
+    public ResponseModel searchName(@RequestBody SearchingRequest request) {
+        List<Patient> patients = repository.findByNameLike(request.word);
+        return sendResponse("Patients found.", patients);
+    }
+
+    @PostMapping("/search/dates")
+    public ResponseModel searchDates(@RequestBody SearchingRequest request) {
+        List<Patient> patients = repository.findByDateOfBirthBetween(request.dateA, request.dateB);
+        return sendResponse("Patients found.", patients);
     }
 }

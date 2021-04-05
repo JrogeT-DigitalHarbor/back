@@ -2,6 +2,7 @@ package jrogetdigitalharbor.back.controllers;
 
 import jrogetdigitalharbor.back.RequestModel;
 import jrogetdigitalharbor.back.ResponseModel;
+import jrogetdigitalharbor.back.SearchingRequest;
 import jrogetdigitalharbor.back.models.Doctor;
 import jrogetdigitalharbor.back.repositories.DoctorRepository;
 import jrogetdigitalharbor.back.repositories.UserRepository;
@@ -73,5 +74,17 @@ public class DoctorController extends BaseController {
         }
         repository.deleteById(id);
         return sendResponse("Doctor deleted.");
+    }
+
+    @PostMapping("/search/name")
+    public ResponseModel searchName(@RequestBody SearchingRequest request) {
+        List<Doctor> doctors = repository.findByNameLike(request.word);
+        return sendResponse("Doctors found.", doctors);
+    }
+
+    @PostMapping("/search/dates")
+    public ResponseModel searchDates(@RequestBody SearchingRequest request) {
+        List<Doctor> doctors = repository.findByDateOfBirthBetween(request.dateA, request.dateB);
+        return sendResponse("Doctors found.", doctors);
     }
 }
