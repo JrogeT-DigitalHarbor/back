@@ -1,8 +1,6 @@
 package jrogetdigitalharbor.back.controllers;
 
-import jrogetdigitalharbor.back.RequestModel;
-import jrogetdigitalharbor.back.ResponseModel;
-import jrogetdigitalharbor.back.SearchingRequest;
+import jrogetdigitalharbor.back.*;
 import jrogetdigitalharbor.back.models.Appointment;
 import jrogetdigitalharbor.back.models.Patient;
 import jrogetdigitalharbor.back.repositories.PatientRepository;
@@ -12,6 +10,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+//------------------FILES--------------------
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -33,6 +49,8 @@ public class PatientController extends BaseController {
             userRepository.findById(request.userId).get();
             Patient newPatient = new Patient(request);
             Patient patientCreated = repository.save(newPatient);
+            patientCreated.profilePicture = patientCreated.id;
+            patientCreated = repository.save(patientCreated);
             return sendResponse(modelName + " created.", patientCreated);
         } catch (NoSuchElementException e) {
             return sendResponse("User not found.");
